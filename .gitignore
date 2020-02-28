@@ -1,0 +1,9 @@
+################################################################################
+# Project Template - GItignore - Repository exclusion patterns                 #
+################################################################################
+
+# Prevent all local sensible data to be commited
+/environment-files/*.local
+
+# IntelliJ-based IDEs, like PHPStorm or WebStorm
+\.idea

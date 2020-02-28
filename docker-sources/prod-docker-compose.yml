@@ -1,0 +1,62 @@
+####################################################################################
+# [new-project-template] - Docker - prod Container Configuration                   #
+####################################################################################
+
+# Docker-compose language version
+version: '3.6'
+
+# Docker networking configuration
+networks:
+
+  # Defining the virtual network used by docker internally
+  [new-project-template]_prod_network:
+    ipam:
+      driver: default
+
+      # 10.0.0.0 > 10.0.255.255
+      # Network IPs structure is the following:
+      # 10 . [environment] . [technology] . [instance]
+      config:
+        -   subnet: 10.0.0.0/16
+
+# Containers services definition
+services:
+
+  #########################################################################
+  # NginX Container Configuration                                         #
+  #########################################################################
+  nginx:
+
+    # Image Generation
+    build:
+      context: "./containers-config/nginx/prod-nginx"
+      dockerfile: "prod-nginx-container-config.docker"
+
+    # Generated Image Calling
+    image: [new-project-template]-prod-nginx
+
+    # The inner container name for docker console commands
+    container_name: [new-project-template]-prod-nginx
+
+    # Custom container port : NginX application port for FastCGI
+    ports:
+      - "10101:10101"
+
+    # ENV file utilisation
+    # This file is to complete for each environment by the prodeloper
+    env_file:
+      - "../environment-files/.env"
+      - "../environment-files/.env.prod"
+
+    volumes:
+      # Then, the ENV files containing app-global-but-subject-to-change and local, sensitive key/values.
+      - ../environment-files:/projects/[new-project-template]/environment-files
+
+      # Then the compiled, compressed, optimized frontend
+      - ../frontend-built/frontend:/projects/[new-project-template]/frontend
+
+    # Give a static IP address to this container
+    # From the network named "network"
+    networks:
+      [new-project-template]_prod_network:
+        ipv4_address: 10.0.1.1

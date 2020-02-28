@@ -1,0 +1,2 @@
+# This file will contain all the exceptions that Docker will take into account
+# while ADDing, COPYing, or mounting VOLUMEs.

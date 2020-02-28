@@ -1,0 +1,15 @@
+#!/bin/sh
+
+################################################################################
+# Project Template - Windows - Git hooks - Check the commit message syntax     #
+################################################################################
+
+# Careful! Change this file only if you really need to do it.
+# Check the directory git-hooks-sources if you need to modified git hooks
+ECHO .
+ECHO ---------------------------------------------------
+ECHO Checking your commit message syntax
+ECHO ---------------------------------------------------
+
+# Redirection of the script to git-hooks-sources/commit-msg.bat at the source of the project
+sh git-hooks-sources/commit-msg.bat "$1"

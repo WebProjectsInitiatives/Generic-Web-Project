@@ -1,0 +1,62 @@
+####################################################################################
+# [new-project-template] - Docker - Development Container Configuration            #
+####################################################################################
+
+# Docker-compose language version
+version: '3.6'
+
+# Docker networking configuration
+networks:
+
+  # Defining the virtual network used by docker internally
+  [new-project-template]_dev_network:
+    ipam:
+      driver: default
+
+      # 10.2.0.0 > 10.2.255.255
+      # Network IPs structure is the following:
+      # 10 . [environment] . [technology] . [instance]
+      config:
+        -   subnet: 10.2.0.0/16
+
+# Containers services definition
+services:
+
+  #########################################################################
+  # NginX Container Configuration                                         #
+  #########################################################################
+  nginx:
+
+    # Image Generation
+    build:
+      context: "./containers-config/nginx/dev-nginx"
+      dockerfile: "dev-nginx-container-config.docker"
+
+    # Generated Image Calling
+    image: [new-project-template]-dev-nginx
+
+    # The inner container name for docker console commands
+    container_name: [new-project-template]-dev-nginx
+
+    # Custom container port : NginX application port for FastCGI
+    ports:
+      - "10121:10121"
+
+    # ENV file utilisation
+    # This file is to complete for each environment by the developer
+    env_file:
+      - "../environment-files/.env"
+      - "../environment-files/.env.dev"
+
+    volumes:
+      # Then, the ENV files containing app-global-but-subject-to-change and local, sensitive key/values.
+      - ../environment-files:/projects/[new-project-template]/environment-files
+
+      # Then the compiled, compressed, optimized frontend
+      - ../frontend-built/frontend:/projects/[new-project-template]/frontend
+
+    # Give a static IP address to this container
+    # From the network named "network"
+    networks:
+      [new-project-template]_dev_network:
+        ipv4_address: 10.2.1.1

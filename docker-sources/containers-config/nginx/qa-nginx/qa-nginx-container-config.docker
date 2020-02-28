@@ -1,0 +1,15 @@
+####################################################################################
+# [new-project-template] - Docker - QA Nginx container Configuration               #
+####################################################################################
+
+# FROM pulls an image from DockerHub
+# Image version is set by the value after the colon
+# Uses Debian Stretch-Slim image
+FROM nginx:1.16.0
+
+# Run will execute a command in the container
+# Adding custom sysadmin utilities
+RUN apt-get update && apt-get install -y vim nano procps net-tools wget curl iputils-ping
+
+# Use a custom configuration file for frontend.
+COPY qa.[new-project-template].localfakedomain.local.conf /etc/nginx/conf.d/qa.[new-project-template].localfakedomain.local.conf
